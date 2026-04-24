@@ -5,6 +5,7 @@ import com.smartload.optimizer.model.OptimizeRequest
 import com.smartload.optimizer.model.OptimizeResponse
 import com.smartload.optimizer.model.Order
 import com.smartload.optimizer.model.Truck
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -27,6 +28,12 @@ import java.math.RoundingMode
 @Service
 class OptimizerService {
 
+    /**
+     * Results are memoised by full request equality (Kotlin data-class hashCode/equals).
+     * Repeated identical payloads skip the O(2ⁿ) computation entirely.
+     * Cache is bounded to 1 000 entries and expires after 1 hour (see application.yml).
+     */
+    @Cacheable("optimize-results")
     fun optimize(request: OptimizeRequest): OptimizeResponse {
         val truck = request.truck
         val orders = request.orders

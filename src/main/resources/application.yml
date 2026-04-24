@@ -3,9 +3,23 @@ server:
 
 spring:
   jackson:
-    # Serialize/deserialize all fields using snake_case (e.g. truckId ↔ truck_id)
     property-naming-strategy: SNAKE_CASE
     serialization:
       write-dates-as-timestamps: false
     deserialization:
       fail-on-unknown-properties: false
+
+  # Caffeine in-memory cache: max 1 000 entries, evict after 1 hour of no writes
+  cache:
+    type: caffeine
+    caffeine:
+      spec: maximumSize=1000,expireAfterWrite=3600s
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: always
