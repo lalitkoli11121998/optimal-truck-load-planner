@@ -1,0 +1,11 @@
+server:
+  port: 8080
+
+spring:
+  jackson:
+    # Serialize/deserialize all fields using snake_case (e.g. truckId ↔ truck_id)
+    property-naming-strategy: SNAKE_CASE
+    serialization:
+      write-dates-as-timestamps: false
+    deserialization:
+      fail-on-unknown-properties: false
